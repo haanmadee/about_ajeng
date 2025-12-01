@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ajeng — Creative Journey</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=Syne:wght@400;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg: #e8e8e8;
+      --fg: #000000;
+      --muted: #242323;
+      --accent: #18375d;
+      --ease: cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; cursor: none; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg);
+      color: var(--fg);
+      overflow-x: hidden;
+      width: 100%;
+    }
+
+    /* --- CUSTOM CURSOR --- */
+    .cursor-dot {
+      width: 8px; height: 8px; background: white; border-radius: 50%;
+      position: fixed; pointer-events: none; z-index: 9999;
+      top: 0; left: 0; transform: translate(-50%, -50%);
+    }
+    .cursor-outline {
+      width: 40px; height: 40px; border: 1px solid rgba(255,255,255,0.5); border-radius: 50%;
+      position: fixed; pointer-events: none; z-index: 9999;
+      top: 0; left: 0; transform: translate(-50%, -50%);
+      transition: width 0.3s, height 0.3s, background 0.3s;
+    }
+    body.hovering .cursor-outline {
+      width: 70px; height: 70px; background: rgba(255,255,255,0.1); border-color: transparent;
+      backdrop-filter: blur(2px);
+    }
+
+    /* --- GRAIN --- */
+    .noise {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      opacity: 0.05; pointer-events: none; z-index: 9000;
+      background: url('https://grainy-gradients.vercel.app/noise.svg');
+    }
+
+    /* --- TYPOGRAPHY --- */
+    h1, h2 { font-family: 'Syne', sans-serif; font-weight: 800; line-height: 1; margin-bottom: 24px; color: var(--accent); }
+    p { line-height: 1.7; color: var(--muted); font-size: 1.05rem; margin-bottom: 16px; }
+    strong { color: var(--fg); font-weight: 600; }
+    
+    header {
+      position: fixed; top: 0; left: 0; width: 100%; padding: 30px 40px;
+      display: flex; justify-content: space-between; align-items: center; z-index: 100;
+      mix-blend-mode: exclusion;
+    }
+    .logo { font-weight: 800; letter-spacing: -1px; font-size: 1.2rem; }
+    .btn-nav { text-decoration: none; color: white; font-weight: 600; position: relative; }
+    .btn-nav::after {
+      content: ''; position: absolute; bottom: -4px; left: 0; width: 0%; height: 2px;
+      background: white; transition: width 0.3s var(--ease);
+    }
+    .btn-nav:hover::after { width: 100%; }
+
+    /* --- LAYOUT --- */
+    .scroll-container {
+      width: 400%; /* 4 Section Horizontal */
+      height: 100vh;
+      display: flex;
+      flex-wrap: nowrap;
+    }
+
+    section {
+      width: 100vw; height: 100vh;
+      padding: 0 6vw;
+      display: flex; align-items: center; justify-content: space-between;
+      position: relative;
+    }
+
+    .text-col {
+      width: 45%; 
+      max-width: 650px;
+      z-index: 2;
+    }
+
+    .img-col {
+      width: 50%;
+      height: 100%;
+      display: flex; align-items: center; justify-content: center;
+      position: relative;
+    }
+
+    /* --- IMAGE STYLING (UNCROPPED) --- */
+    /* Gambar bebas tanpa frame crop */
+    .free-img {
+      max-width: 100%;
+      max-height: 85vh; /* Biar gak mentok atas bawah */
+      width: auto;
+      object-fit: contain; /* Kuncinya disini: gambar utuh */
+      border-radius: 12px;
+      box-shadow: 0 20px 50px -10px rgba(0,0,0,0.5); /* Shadow biar ngangkat */
+      transform-origin: center center;
+    }
+
+    /* --- GALLERY GRID (Slide 3) --- */
+    .gallery-wrap {
+      display: flex; gap: 20px; align-items: center;
+    }
+    .gallery-wrap img {
+      width: 200px; height: auto; border-radius: 8px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+      transition: transform 0.4s var(--ease);
+    }
+    .gallery-wrap img:hover { transform: scale(1.05) rotate(-2deg); z-index: 10; }
+
+    /* --- ANIMATION UTILS --- */
+    .reveal-wrap { overflow: hidden; display: block; }
+    .reveal-wrap span { display: block; transform: translateY(120%); }
+
+    /* --- RESPONSIVE MOBILE --- */
+    @media (max-width: 900px) {
+      .scroll-container { width: 100%; height: auto; flex-direction: column; }
+      section { 
+        width: 100%; height: auto; min-height: 100vh; 
+        flex-direction: column; padding: 100px 24px; 
+        justify-content: flex-start; gap: 40px;
+      }
+      .text-col, .img-col { width: 100%; }
+      .img-col { height: auto; justify-content: flex-start; }
+      .free-img { max-height: 50vh; width: 100%; object-fit: cover; border-radius: 8px; }
+      h1, h2 { font-size: 2.5rem; }
+      
+      /* Reset Gallery on Mobile */
+      .gallery-wrap { flex-wrap: wrap; justify-content: center; }
+      .gallery-wrap img { width: 45%; }
+      
+      .cursor-dot, .cursor-outline { display: none; }
+      * { cursor: auto; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="noise"></div>
+  <div class="cursor-dot"></div>
+  <div class="cursor-outline"></div>
+
+  <header>
+    <div class="logo hover-trigger">AJENG / ABOUT</div>
+    <a href="https://lynk.id/ajengwahys" class="btn-nav hover-trigger">HOME</a>
+  </header>
+
+  <div class="outer-wrapper">
+    <div class="scroll-container">
+
+      <section id="slide1">
+        <div class="text-col">
+          <h1 style="font-size: clamp(3rem, 5vw, 5rem);">
+            <span class="reveal-wrap"><span>HELLO, AKU</span></span>
+            <span class="reveal-wrap"><span style="color: #030303; font-style: italic;">AJENG.</span></span>
+          </h1>
+          <div class="reveal-text">
+            <p>Remote worker sejak 6 tahun lalu, sekarang sambil jadi <strong>mom full energy</strong> dan masih terus membangun kehidupan work-from-anywhere.</p>
+          </div>
+          <br>
+          <div class="reveal-text">
+             <a href="https://wa.link/hxt72n" class="btn-nav hover-trigger" style="border-bottom: 1px solid #555; padding-bottom: 4px;">Contact Me &rarr;</a>
+          </div>
+        </div>
+        <div class="img-col">
+          <img src="https://cdn.lynkid.my.id/draft-products/01-12-2025/1764561999173_1288141.png" class="free-img parallax-item hover-trigger">
+        </div>
+      </section>
+
+      <section id="slide2">
+        <div class="img-col" style="order: 1; justify-content: center;">
+           <img src="https://cdn.lynkid.my.id/draft-products/01-12-2025/1764570536991_2723425.png" class="free-img parallax-item hover-trigger">
+        </div>
+        
+        <div class="text-col" style="order: 2; padding-left: 40px;">
+          <h2>
+            <span class="reveal-wrap"><span>AWAL</span></span>
+            <span class="reveal-wrap"><span>MULAI</span></span>
+          </h2>
+          <div class="reveal-text">
+            <p>Tahun 2019 aku mulai bekerja WFO. Di saat yang sama, rasa penasaranku pada dunia digital makin besar.</p>
+            <p>Walaupun latar belakang pendidikanku <strong>Gizi Klinik (2018)</strong>, aku justru menemukan minat kuat di desain dan media. Jadi di luar jam kantor, aku mulai belajar, ikut kelas kecil, eksplor software, ambil project receh, dan ngetes diri sendiri pelan-pelan.</p>
+            <p>Aku belum tau arahnya akan kemana, tapi aku tahu satu hal: dunia digital punya peluang, dan aku mau <strong>AKU SIAP</strong> ketika saatnya datang.</p>
+          </div>
+        </div>
+      </section>
+
+      <section id="slide3">
+        <div class="text-col">
+          <h2>
+            <span class="reveal-wrap"><span>MOMEN</span></span>
+            <span class="reveal-wrap"><span>LAYOFF</span></span>
+          </h2>
+          <div class="reveal-text">
+            <p>Masuk 2020, pandemi datang dan aku kena layoff. Tapi karena sejak 2019 aku sudah bangun fondasi dan nyari peluang digital, transisinya tidak seberat itu. Justru layoff itu bikin aku lebih berani masuk ke remote working dengan serius.</p>
+            <p>Sekarang aku kerja remote sambil mengurus toddler yang energinya selalu full bar. Ritmenya lumayan padat, tapi fleksibilitas remote work bikin semuanya tetap berjalan tanpa harus mengorbankan peran lain.</p>
+          </div>
+        </div>
+        
+        <div class="img-col">
+           <div class="gallery-wrap">
+             <img src="https://cdn.lynkid.my.id/draft-products/01-12-2025/1764568350113_1299887.jpeg" class="parallax-item hover-trigger" style="margin-top: -50px;">
+             <img src="https://cdn.lynkid.my.id/draft-products/01-12-2025/1764568384937_2175162.jpeg" class="parallax-item hover-trigger" style="margin-top: 50px;">
+             <img src="https://cdn.lynkid.my.id/draft-products/01-12-2025/1764569932892_9507910.png" class="parallax-item hover-trigger">
+           </div>
+        </div>
+      </section>
+
+      <section id="slide4">
+        <div class="text-col" style="width: 100%; text-align: center; max-width: 800px; margin: 0 auto;">
+          <h2 style="font-size: clamp(3rem, 6vw, 6rem);">
+            <span class="reveal-wrap"><span>LET'S WORK</span></span>
+            <span class="reveal-wrap"><span>TOGETHER</span></span>
+          </h2>
+          <div class="reveal-text" style="display: flex; flex-direction: column; align-items: center;">
+            <p>Aku Ajeng, dan aku siap bantu kamu bikin kerjaanmu lebih ringan lewat cara kerja yang efisien & remote-friendly.</p>
+            <br>
+            <a href="https://lynk.id/ajengwahys" target="_blank" class="hover-trigger" style="
+              display: inline-block;
+              background: #fff; color: #000;
+              padding: 18px 40px; border-radius: 50px;
+              text-decoration: none; font-weight: 800;
+              font-size: 1.1rem; letter-spacing: 1px;
+              transition: transform 0.2s;
+            ">LIHAT LAYANAN</a>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/gsap@3/dist/gsap.min.js"></script>
+  <script src="https://unpkg.com/gsap@3/dist/ScrollTrigger.min.js"></script>
+
+  <script>
+    gsap.registerPlugin(ScrollTrigger);
+
+    /* --- CURSOR --- */
+    const dot = document.querySelector('.cursor-dot');
+    const outline = document.querySelector('.cursor-outline');
+
+    window.addEventListener('mousemove', (e) => {
+      const x = e.clientX;
+      const y = e.clientY;
+      dot.style.top = y + 'px'; dot.style.left = x + 'px';
+      
+      // Outline follows slightly slower via GSAP
+      gsap.to(outline, { x: x, y: y, duration: 0.15, ease: "power2.out" });
+    });
+
+    document.querySelectorAll('.hover-trigger').forEach(el => {
+      el.addEventListener('mouseenter', () => document.body.classList.add('hovering'));
+      el.addEventListener('mouseleave', () => document.body.classList.remove('hovering'));
+    });
+
+    /* --- HORIZONTAL SCROLL & ANIMATIONS --- */
+    let sections = gsap.utils.toArray("section");
+    let container = document.querySelector(".scroll-container");
+
+    let scrollTween;
+
+    function initScroll() {
+      if(scrollTween) scrollTween.kill();
+
+      if (window.innerWidth > 900) {
+        // Desktop: Horizontal Scroll
+        scrollTween = gsap.to(sections, {
+          xPercent: -100 * (sections.length - 1),
+          ease: "none",
+          scrollTrigger: {
+            trigger: ".scroll-container",
+            pin: true,
+            scrub: 1,
+            end: () => "+=" + container.offsetWidth
+          }
+        });
+
+        // Parallax Image Effect (Horizontal)
+        // Gambar bergerak sedikit lebih cepat dari scroll untuk efek depth
+        document.querySelectorAll(".parallax-item").forEach(img => {
+          gsap.fromTo(img, 
+            { x: 100 }, 
+            { x: -100, ease: "none", 
+              scrollTrigger: {
+                trigger: img.closest("section"),
+                containerAnimation: scrollTween,
+                start: "left right",
+                end: "right left",
+                scrub: true
+              }
+            }
+          );
+        });
+
+        // Text Reveal Animation
+        sections.forEach(section => {
+          let textWraps = section.querySelectorAll(".reveal-wrap span");
+          let paras = section.querySelectorAll(".reveal-text");
+          
+          if(textWraps.length > 0) {
+            gsap.to(textWraps, {
+              y: 0, duration: 1, ease: "power3.out", stagger: 0.1,
+              scrollTrigger: {
+                trigger: section,
+                containerAnimation: scrollTween,
+                start: "left 60%",
+                toggleActions: "play none none reverse"
+              }
+            });
+          }
+          if(paras.length > 0) {
+             gsap.from(paras, {
+               opacity: 0, y: 30, duration: 1, delay: 0.3,
+               scrollTrigger: {
+                 trigger: section, containerAnimation: scrollTween, start: "left 60%",
+                 toggleActions: "play none none reverse"
+               }
+             })
+          }
+        });
+
+      } else {
+        // Mobile: Reset position
+        gsap.set(sections, { xPercent: 0 });
+        
+        // Simple fade up on scroll for mobile
+        document.querySelectorAll(".reveal-wrap span").forEach(el => {
+          gsap.to(el, { y: 0, duration: 0.8, scrollTrigger: { trigger: el, start: "top 85%" } });
+        });
+        document.querySelectorAll(".reveal-text").forEach(el => {
+          gsap.from(el, { opacity:0, y:30, duration: 0.8, scrollTrigger: { trigger: el, start: "top 85%" } });
+        });
+      }
+    }
+
+    initScroll();
+    window.addEventListener("resize", initScroll);
+
+  </script>
+</body>
+</html>
